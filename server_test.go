@@ -1,18 +1,23 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
 func TestCreatePairDevice(t *testing.T) {
-	rec := httptest.NewRequest(http.MethodPost, "/pair-device", nil)
+	payload := new(bytes.Buffer)
+	json.NewEncoder(payload).Encode(Pair{DeviceID: 1234, UserID: 4433})
+	req := httptest.NewRequest(http.MethodPost, "/pair-device", payload)
 	rec := httptest.NewRecorder()
+
 	PairDeviceHandler(rec, req)
 
-	if http.StatusOK != rec.code {
-		t.Errorf("expected 2000 ok but got ", rec.Code)
+	if http.StatusOK != rec.Code {
+		t.Error("expect 200 OK but got ", rec.Code)
 	}
 
 	expected := `{"status":"active"}`
