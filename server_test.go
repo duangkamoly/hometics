@@ -8,17 +8,12 @@ import (
 	"testing"
 )
 
-type mockPairDevice struct{}
-
-func (mockPairDevice) Pair(p Pair) error {
-	return nil
-}
-
 func TestCreatePairDevice(t *testing.T) {
 	payload := new(bytes.Buffer)
 	json.NewEncoder(payload).Encode(Pair{DeviceID: 1234, UserID: 4433})
 	req := httptest.NewRequest(http.MethodPost, "/pair-device", payload)
 	rec := httptest.NewRecorder()
+
 	create := func(p Pair) error {
 		return nil
 	}
